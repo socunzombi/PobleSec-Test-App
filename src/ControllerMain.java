@@ -19,7 +19,11 @@ public class ControllerMain {
 
     @FXML
     void OnClickEditQuestionsButton(ActionEvent event) {
-
+        try {
+            this.start((Stage) StartTestButton.getScene().getWindow(), "/fxml/listQuestion.fxml");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -39,12 +43,8 @@ public class ControllerMain {
 
     private void start(Stage stage, String FXMLfile) throws java.net.MalformedURLException {
         try{
-            Parent root = FXMLLoader.load(getClass().getResource(FXMLfile));
-            Scene scene = new Scene(root);
-            stage.setTitle("PS Test");
-            stage.getIcons().add(new Image(getClass().getResourceAsStream("images/icon.png")));
-            stage.setScene(scene);
-            stage.show();
+            Scene scene = stage.getScene();
+            scene.setRoot(FXMLLoader.load(getClass().getResource(FXMLfile)));
         }
         catch (java.io.IOException ioe)
         {
