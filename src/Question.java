@@ -1,20 +1,20 @@
+import java.util.ArrayList;
 import java.util.List;
 
 public class Question {
 
     //region variables
-    int id;
-    String question;
-    Answer correctAnswer;
-    List<Answer> incorrectAnswers;
+    private int id;
+    private String question;
+    private String correctAnswer;
+    private List<String> incorrectAnswers;
     //endregion
 
     //region constructor
-    public Question(int id, String question, Answer correctAnswer, List<Answer> incorrectAnswers) {
+    public Question(int id, String question) {
         this.setId(id);
         this.setQuestion(question);
-        this.setCorrectAnswer(correctAnswer);
-        this.setIncorrectAnswers(incorrectAnswers);
+        this.setIncorrectAnswers(new ArrayList<String>());
     }
     //endregion
 
@@ -27,16 +27,12 @@ public class Question {
         return this.question;
     }
 
-    public Answer getCorrectAnswer() {
+    public String getCorrectAnswer() {
         return correctAnswer;
     }
 
-    public List<Answer> getIncorrectAnswers() {
+    public List<String> getIncorrectAnswers() {
         return this.incorrectAnswers;
-    }
-
-    public Answer getIncorrectAnswerById(int id) {
-        return this.incorrectAnswers.stream().filter(ans -> ans.getId() == id).findFirst().orElse(null);
     }
     //endregion
 
@@ -49,20 +45,24 @@ public class Question {
         this.question = question;
     }
 
-    public void setIncorrectAnswers(List<Answer> incorrectAnswers) {
+    public void setIncorrectAnswers(List<String> incorrectAnswers) {
         this.incorrectAnswers = incorrectAnswers;
     }
 
-    public void setCorrectAnswer(Answer correctAnswer) {
+    public void setCorrectAnswer(String correctAnswer) {
         this.correctAnswer = correctAnswer;
     }
 
-    public void setNewIncorrectAnswer (Answer incorrectAnswer) {
+    public void setNewIncorrectAnswer (String incorrectAnswer) {
         this.incorrectAnswers.add(incorrectAnswer);
     }
-
-    public void deleteIncorrectAnswer(int id){
-        this.incorrectAnswers.remove(this.getIncorrectAnswerById(id));
-    }
     // endregion
+
+    public void deleteIncorrectAnswer(String answer){
+        this.incorrectAnswers.remove(answer);
+    }
+
+    public String convertToCSV() {
+        return this.getId() + ";" + this.getQuestion();
+    }
 }
