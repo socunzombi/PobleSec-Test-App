@@ -7,9 +7,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.text.Text;
 import java.net.MalformedURLException;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 public class ControllerQuestion {
