@@ -19,6 +19,7 @@ public class View extends Application {
     }
  
     public static void main(String[] args) {
+        Questions.getInstance();
         launch();
     }
 }

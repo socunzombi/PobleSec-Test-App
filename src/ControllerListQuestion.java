@@ -24,6 +24,8 @@ public class ControllerListQuestion {
     @FXML
     private Button turnBackButton;
 
+    Questions questions;
+
     @FXML
     void OnClickAddQuestionButton(ActionEvent event) {
 
@@ -45,6 +47,7 @@ public class ControllerListQuestion {
 
     @FXML
     void OnClickTurnBackButton(ActionEvent event) {
+        questions.SaveQuestions();
         try {
             this.start((Stage) editQuestionButton.getScene().getWindow(), "/fxml/main.fxml");
         } catch (MalformedURLException e) {
@@ -59,6 +62,8 @@ public class ControllerListQuestion {
         assert editQuestionButton != null : "fx:id=\"editQuestionButton\"";
         assert questionTextField != null : "fx:id=\"questionTextField\"";
         assert turnBackButton != null : "fx:id=\"turnBackButton\"";
+
+        questions = Questions.getInstance();
     }
 
     private void start(Stage stage, String FXMLfile) throws java.net.MalformedURLException {

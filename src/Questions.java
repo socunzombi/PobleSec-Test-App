@@ -2,19 +2,19 @@ import java.util.List;
 
 public class Questions {
 
-    private Questions singleton;
+    private static Questions singleton;
     List<Question> questions;
 
     private Questions() {
         this.StartQuestions();
     }
 
-    public Questions getInstance() {
-        if (this.singleton == null) {
-            this.singleton = new Questions();
+    public static Questions getInstance() {
+        if (singleton == null) {
+            singleton = new Questions();
         }
 
-        return this.singleton;
+        return singleton;
     }
 
     private void StartQuestions() {

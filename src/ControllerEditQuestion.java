@@ -31,6 +31,8 @@ public class ControllerEditQuestion {
     @FXML
     private TextField wrongAnswer02TextField;
 
+    private Questions questions;
+
     @FXML
     void OnClickAddAnswerButton(ActionEvent event) {
 
