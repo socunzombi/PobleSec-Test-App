@@ -3,15 +3,18 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class Questions {
 
     private static Questions singleton;
-    List<Question> questions;
+    private List<Question> questions;
+    private int currentQuestionId;
 
     private Questions() {
         this.questions = new ArrayList<Question>();
+        this.setCurrentQuestionId(-1);
     }
 
     public static Questions getInstance() {
@@ -27,6 +30,30 @@ public class Questions {
         }
 
         return singleton;
+    }
+
+    public void setCurrentQuestionId(int currentQuestionId) {
+        this.currentQuestionId = currentQuestionId;
+    }
+
+    public int getCurrentQuestionId() {
+        return currentQuestionId;
+    }
+
+    public void setQuestions(List<Question> questions) {
+        this.questions = questions;
+    }
+
+    public List<Question> getQuestions() {
+        return questions;
+    }
+
+    public Question getQuestionById (int id) {
+        return this.questions.stream().filter(q -> q.getId() == id).findFirst().orElse(null);
+    }
+
+    public void addQuestion (Question question) {
+        this.questions.add(question);
     }
 
     private static void StartQuestions() throws IOException {
@@ -74,7 +101,7 @@ public class Questions {
 
     private void QuestionsToCSV() throws IOException {
         
-        PrintWriter csvFile = new PrintWriter("./docs/questions.csv");
+        PrintWriter csvFile = new PrintWriter(System.getProperty("user.dir") + "/bin/docs/questions.csv");
 
         for(Question q : questions) {
             csvFile.println(q.convertToCSV());
@@ -85,7 +112,7 @@ public class Questions {
 
     private void AnswersToCSV() throws IOException {
         
-        PrintWriter csvFile = new PrintWriter("./docs/answers.csv");
+        PrintWriter csvFile = new PrintWriter(System.getProperty("user.dir") + "/bin/docs/answers.csv");
 
         for(Question q : questions) {
             csvFile.println(q.getId() + ";" + q.getCorrectAnswer() + ";true");
@@ -94,5 +121,16 @@ public class Questions {
             }
         }
         csvFile.close();
+    }
+
+    public int getNewId() {
+        return singleton.getQuestions()
+                        .stream()
+                        .max(Comparator.comparingInt(Question::getId))
+                        .get().getId() + 1;
+    }
+
+    public void deleteQuestionById(int id) {
+        this.questions.remove(this.getQuestionById(id));
     }
 }
