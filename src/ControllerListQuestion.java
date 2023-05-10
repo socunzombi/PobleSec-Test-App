@@ -112,9 +112,7 @@ public class ControllerListQuestion {
             OnClickDeleteQuestionButton(e, hBox);
         });
 
-        questionBox.getChildren().add(questionBox.getChildren().size() - 1, hBox);
-
-
+        questionBox.getChildren().add(hBox);
     }
 
     private void start(Stage stage, String FXMLfile) throws java.net.MalformedURLException {

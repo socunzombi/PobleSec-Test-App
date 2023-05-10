@@ -3,7 +3,15 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.NodeOrientation;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.net.MalformedURLException;
@@ -13,6 +21,9 @@ public class ControllerEditQuestion {
 
     @FXML
     private Button addAnswerButton;
+
+    @FXML
+    private VBox answersHBox;
 
     @FXML
     private Button cancelButton;
@@ -26,19 +37,15 @@ public class ControllerEditQuestion {
     @FXML
     private Button saveButton;
 
-    @FXML
-    private TextField wrongAnswer01TextField;
-
-    @FXML
-    private TextField wrongAnswer02TextField;
-
     private Questions singleton;
 
     private Question question;
 
+    private int numberOfAnswers;
+
     @FXML
     void OnClickAddAnswerButton(ActionEvent event) {
-
+        this.createHBoxNewWrongAnswer("");
     }
 
     @FXML
@@ -46,7 +53,8 @@ public class ControllerEditQuestion {
         try {
             this.singleton.setCurrentQuestionId(-1);
             this.start((Stage) cancelButton.getScene().getWindow(), "/fxml/listQuestion.fxml");
-        } catch (MalformedURLException e) {
+        } 
+        catch (MalformedURLException e) {
             e.printStackTrace();
         }
     }
@@ -71,18 +79,27 @@ public class ControllerEditQuestion {
 
     private void addNewQuestion () {
         this.question = new Question(this.singleton.getNewId(), this.questionTextArea.getText());
-
-        this.question.setQuestion(this.questionTextArea.getText());
-        this.question.setCorrectAnswer(this.rightQuestionTextField.getText());
-        this.question.setIncorrectAnswers(new ArrayList<String>());
-        this.question.setNewIncorrectAnswer(this.wrongAnswer01TextField.getText());
-        this.question.setNewIncorrectAnswer(this.wrongAnswer02TextField.getText());
-
+        this.completeQuestion();
         this.singleton.addQuestion(question);
     }
 
     private void editCurrentQuestion () {
+        this.question = new Question(this.singleton.getCurrentQuestionId(), this.questionTextArea.getText());
+        this.completeQuestion();
+        this.singleton.getQuestionById(this.singleton.getCurrentQuestionId()).setNewValues(this.question);
+    }
 
+    private void completeQuestion() {
+        this.question.setQuestion(this.questionTextArea.getText());
+        this.question.setCorrectAnswer(this.rightQuestionTextField.getText());
+        this.question.setIncorrectAnswers(new ArrayList<String>());
+        
+        for (int i = 1; i <= this.numberOfAnswers; i++) {
+            Node node = this.answersHBox.getScene().lookup("#wrongAnswerTextField" + i);
+            if (node instanceof TextField) {
+                this.question.setNewIncorrectAnswer(((TextField) node).getText());
+            }
+        }
     }
 
     @FXML
@@ -92,16 +109,24 @@ public class ControllerEditQuestion {
         assert questionTextArea != null : "fx:id=\"questionTextArea\"";
         assert rightQuestionTextField != null : "fx:id=\"rightQuestionTextField\"";
         assert saveButton != null : "fx:id=\"saveButton\"";
-        assert wrongAnswer01TextField != null : "fx:id=\"wrongAnswer01TextField\"";
-        assert wrongAnswer02TextField != null : "fx:id=\"wrongAnswer02TextField\"";
+        assert answersHBox != null : "fx:id=\"answersHBox\"";
 
         this.singleton = Questions.getInstance();
 
         this.question = this.singleton.getQuestionById(this.singleton.getCurrentQuestionId());
+        this.numberOfAnswers = 0;
 
         if (this.question != null) {
             this.questionTextArea.setText(this.question.getQuestion());
             this.rightQuestionTextField.setText(this.question.getCorrectAnswer());
+
+            for (String answer : this.question.getIncorrectAnswers()) {
+                this.createHBoxNewWrongAnswer(answer);
+            }
+        }
+        else {
+            this.createHBoxNewWrongAnswer("");
+            this.createHBoxNewWrongAnswer("");
         }
     }
 
@@ -114,6 +139,26 @@ public class ControllerEditQuestion {
         {
             ioe.printStackTrace();
         }
+    }
+
+    private void createHBoxNewWrongAnswer (String answer) {
+        this.numberOfAnswers++;
+
+        TextField tf = new TextField(answer);
+        tf.setId("wrongAnswerTextField" + this.numberOfAnswers);
+        tf.setEditable(true);
+        tf.setAlignment(Pos.CENTER_LEFT);
+        tf.setNodeOrientation(NodeOrientation.INHERIT);
+        HBox.setHgrow(tf, Priority.ALWAYS);
+
+        Text text = new Text("RESPUESTA INCORRECTA " + this.numberOfAnswers);
+        
+        HBox hBox = new HBox(20, text, tf);
+        hBox.setId("hBox" + this.numberOfAnswers);
+        hBox.setPadding(new Insets(0, 20.0, 0, 20.0));
+        hBox.setAlignment(Pos.CENTER_LEFT);
+
+        answersHBox.getChildren().add(hBox);
     }
 
 }

@@ -124,10 +124,12 @@ public class Questions {
     }
 
     public int getNewId() {
-        return singleton.getQuestions()
+        return singleton.getQuestions().size() > 0 ? 
+               singleton.getQuestions()
                         .stream()
                         .max(Comparator.comparingInt(Question::getId))
-                        .get().getId() + 1;
+                        .get().getId() + 1 : 
+                        1;
     }
 
     public void deleteQuestionById(int id) {

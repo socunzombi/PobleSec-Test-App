@@ -65,4 +65,10 @@ public class Question {
     public String convertToCSV() {
         return this.getId() + ";" + this.getQuestion();
     }
+
+    public void setNewValues (Question q) {
+        this.question = q.getQuestion();
+        this.correctAnswer = q.getCorrectAnswer();
+        this.incorrectAnswers = q.getIncorrectAnswers();
+    }
 }
